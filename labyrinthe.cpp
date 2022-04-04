@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -32,6 +33,70 @@ int murs (labyrinthe l){
     }
     int enceintes = 2 * (l.size() + l[0].size());
     return (f - enceintes) / 2;
+}
+
+bool estLabyrinthe(labyrinthe l, vector<vector<bool> > &passed){
+    bool V = true;
+
+}
+
+labyrinthe pseudeGenerer(int a, int b){
+    labyrinthe l;
+    for(int i = 0; i < a; i++){
+        for(int j = 0; j < b; j++){
+            if(rand()> RAND_MAX/2){
+                l[i][j].bas == false;
+            }
+            if(rand()> RAND_MAX/2){
+                l[i][j].haut == false;
+            }
+            if(rand()> RAND_MAX/2){
+                l[i][j].gauche == false;
+            }
+            if(rand()> RAND_MAX/2){
+                l[i][j].droite == false;
+            }
+        }
+    }
+    for(int bord = 0; bord < b; bord++){
+        l[0][bord].haut = false;// the top side
+        l[a-1][bord].bas = false;//the bottom side
+    }
+    for(int side = 0; side < a; side++){
+        l[side][0].gauche = false;
+        l[side][b-1].droite = false;
+    }
+    return l;
+}
+
+
+void dessine(labyrinthe l){
+    stringstream s;
+    for(int len = 0;len < l[i].size()*3 + 1;len++){
+        s<<"*";
+    }
+    s<<endl;
+    for(int i = 0; i < l[i].size();i++){
+        s<<"*";
+        for(int j = 0; j < l[i].size();j++){
+            if(l[i][j].droite == false){
+                s<<"  *";
+            }else if(l[i][j].droite != false){
+                s<<"   ";
+            }
+        }
+        s<<endl;
+        s<<"*";
+        for(int k = 0; k < l[i].size();k++){
+            if(l[i][k].droite == false){
+                s<<"***";
+            }else if(l[i][k].droite != false){
+                s<<"  *";
+            }
+        }
+        s<<endl;
+    }
+    cout<<s<<endl;
 }
 int main(){
     labyrinthe l;
