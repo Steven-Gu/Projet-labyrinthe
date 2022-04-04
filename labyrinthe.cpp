@@ -12,7 +12,7 @@ struct cell{
     bool chemin = false;
 };
 
-using labyrinthe = vector<vector<cell> >;
+using labyrinthe = vector<vector<cell>>;
 int murs (labyrinthe l){
     int f = 0;
     for(int i = 0;i < l.size();i++){
