@@ -9,7 +9,7 @@ struct cell{
     bool droite;
     bool haut;
     bool bas;
-    bool chemin;
+    bool chemin = false;
 };
 
 using labyrinthe = vector<vector<cell> >;
@@ -34,6 +34,7 @@ int murs (labyrinthe l){
     int enceintes = 2 * (l.size() + l[0].size());
     return (f - enceintes) / 2;
 }
+
 
 bool estLabyrinthe(labyrinthe l, vector<vector<bool> > &passed){
     bool V = true;
@@ -98,6 +99,38 @@ void dessine(labyrinthe l){
     }
     cout<<s<<endl;
 }
+
+void parcourir(labyrinthe l, int i, int j){
+    l[i][j].chemin = true;
+    if (l[i][j].bas == true && l[i + 1][j].chemin == false)
+        parcourir(l, i + 1, j);
+    if (l[i][j].haut == true && l[i - 1][j].chemin == false)
+        parcourir(l, i - 1, j);
+    if (l[i][j].droite == true && l[i][j + 1].chemin == false)
+        parcourir(l, i, j + 1);
+    if (l[i][j].gauche == true && l[i][j - 1].chemin == false)
+        parcourir(l, i, j - 1);
+    
+}
+
+
+void parcourirTraverser(labyrinthe l){
+    for (int i = 0; i < l.size(); i++){
+        for (int j = 0; j < l[i].size(); j++){
+            l[i][j].chemin = false;
+        }
+    }
+
+    for (int i = 0; i < l.size(); i++){
+        for (int j = 0; j < l[i].size(); j++){
+            if(l[i][j].chemin == false)
+                parcourir(l, i, j);
+        }
+    }
+
+}
+
+
 int main(){
     labyrinthe l;
     int m = 4, n = 3;
