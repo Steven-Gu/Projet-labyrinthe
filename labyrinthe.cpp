@@ -5,10 +5,10 @@
 using namespace std;
 
 struct cell{
-    bool gauche = false;
-    bool droite = false;
-    bool haut = false;
-    bool bas = false;
+    bool gauche = true;
+    bool droite = true;
+    bool haut = true;
+    bool bas = true;
     bool chemin = false;
 };
 
@@ -33,18 +33,6 @@ int murs (labyrinthe l){
     }
     int enceintes = 2 * (l.size() + l[0].size());
     return (f - enceintes) / 2;
-}
-void init_enceinte(labyrinthe &l){
-    int m = l[0].size(); // colonne
-    int n = l.size(); // ligne
-    for(int i = 0;i<n;i++){
-        for(int j = 0;j<m;j++){
-            l[i][0].gauche = false;
-            l[i][m-1].droite = false;
-            l[0][j].haut = false;
-            l[n-1][j].bas = false;
-        }
-    }
 }
 
 int nbMurLab(labyrinthe &l){
@@ -82,6 +70,9 @@ string dessin(labyrinthe &l){
             if(!l[i][j].droite){
                 s << "|";
             }
+            else{
+                s << " ";
+            }
         }
         s<< endl;
         /*lignes*/
@@ -94,13 +85,34 @@ string dessin(labyrinthe &l){
     }
     return s.str();
 }
+void init_enceinte(labyrinthe &l){
+    /*
+        initialise les murs des enceintes à false
+    */
+    int m = l[0].size(); // colonne
+    int n = l.size(); // ligne 
+    for(int i = 0;i<n;i++){
+        l[i][0].gauche = false;
+        l[i][m-1].droite = false;
+    }
+    for(int j = 0;j<m;j++){
+        l[0][j].haut = false;
+        l[n-1][j].bas = false;
+    }
+}
 int main(){
     labyrinthe l;
-    int m = 5, n = 10;
+    int m = 15, n = 10;
     l = labyrinthe(n);
     for (int i = 0;i < n;i++){
         l[i] = vector<cell>(m);
+        l[i][3].gauche = false;
+        l[i][4].droite = false;
     }
+    l[0][0].bas = false;
+    l[1][0].haut = false;
+    init_enceinte(l);
+    
     cout << dessin(l);
     return 0;
 }
