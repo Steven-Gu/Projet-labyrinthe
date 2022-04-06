@@ -8,10 +8,10 @@
 using namespace std;
 
 struct cell{
-    bool gauche;
-    bool droite;
-    bool haut;
-    bool bas;
+    bool gauche = true;
+    bool droite = true;
+    bool haut = true;
+    bool bas = true;
     bool chemin = false;
 };
 
@@ -55,7 +55,9 @@ int nbMurLab(labyrinthe &l){
 
 labyrinthe pseudeGenerer(int a, int b){
     labyrinthe l;
+    l = vector<vector<cell> >(a);
     for(int i = 0; i < a; i++){
+        l[i] = vector<cell> (b);
         for(int j = 0; j < b; j++){
             if(rand() > RAND_MAX/2){
                 if(i+1 < a){
@@ -72,6 +74,7 @@ labyrinthe pseudeGenerer(int a, int b){
         }
     }
     for(int bord = 0; bord < b; bord++){
+        
         l[0][bord].haut = false;// the top side
         l[a-1][bord].bas = false;//the bottom side
     }
@@ -122,6 +125,24 @@ string dessin(labyrinthe &l){
     }
     return s.str();
 }
+
+
+void init_enceinte(labyrinthe &l){
+    /*
+        initialise les murs des enceintes à false
+    */
+    int m = l[0].size(); // colonne
+    int n = l.size(); // ligne 
+    for(int i = 0;i<n;i++){
+        l[i][0].gauche = false;
+        l[i][m-1].droite = false;
+    }
+    for(int j = 0;j<m;j++){
+        l[0][j].haut = false;
+        l[n-1][j].bas = false;
+    }
+}
+
 
 
 void parcourir(labyrinthe l, int i, int j){
