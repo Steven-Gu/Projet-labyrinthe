@@ -140,7 +140,7 @@ labyrinthe pseudeGenerer(int m, int n){
 }
 
 
-void parcourir(labyrinthe l, int i, int j){
+void parcourir(labyrinthe &l, int i, int j){
     l[i][j].chemin = true;
     if (l[i][j].bas == true && l[i + 1][j].chemin == false)
         parcourir(l, i + 1, j);
@@ -154,7 +154,7 @@ void parcourir(labyrinthe l, int i, int j){
 }
 
 
-void parcourirTraverser(labyrinthe l){
+void parcourirTraverser(labyrinthe &l){
     for (int i = 0; i < l.size(); i++){
         for (int j = 0; j < l[i].size(); j++){
             l[i][j].chemin = false;
@@ -170,13 +170,35 @@ void parcourirTraverser(labyrinthe l){
 
 }
 
+bool estlabyrinthe(labyrinthe &l){
+    int m = l[0].size(); // colonne
+    int n = l.size(); // ligne
+    int nb_murs = murs(l);
+    if (nb_murs != nbMurLab(l))
+        return false;
+    parcourirTraverser(l);
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(l[i][j].chemin == false)
+                return false;
+        }
+    }
+    return true;
+}
+
 
 int main(){
     labyrinthe l;
-    l = pseudeGenerer(2, 3);
-    cout << dessin(l);
-    
-
-    
+    int num = 0;
+    while (num <= 0){
+        l = pseudeGenerer(3, 2);
+        if ( estlabyrinthe(l)){
+            num++;
+            cout << dessin(l) << endl;
+            cout<<murs(l)<<endl;
+            cout<<nbMurLab(l)<<endl;
+        }
+    }
+      
     return 0;
 }
