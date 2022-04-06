@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <iomanip>
+#include <ctime>
 
 
 using namespace std;
@@ -50,39 +51,6 @@ int nbMurLab(labyrinthe &l){
    int m = l[0].size(); // colonne
    int n = l.size(); // ligne
    return m * n - n - m + 1;
-}
-
-
-labyrinthe pseudeGenerer(int a, int b){
-    labyrinthe l;
-    l = vector<vector<cell> >(a);
-    for(int i = 0; i < a; i++){
-        l[i] = vector<cell> (b);
-        for(int j = 0; j < b; j++){
-            if(rand() > RAND_MAX/2){
-                if(i+1 < a){
-                    l[i][j].bas = false;
-                    l[i+1][j].haut = false;
-                }
-            }
-            if(rand() > RAND_MAX/2){
-                if(j+1 < b){
-                    l[i][j].gauche = false;
-                    l[i][j+1].droite = false;
-                }
-            } 
-        }
-    }
-    for(int bord = 0; bord < b; bord++){
-        
-        l[0][bord].haut = false;// the top side
-        l[a-1][bord].bas = false;//the bottom side
-    }
-    for(int side = 0; side < a; side++){
-        l[side][0].gauche = false;
-        l[side][b-1].droite = false;
-    }
-    return l;
 }
 
 
@@ -143,6 +111,33 @@ void init_enceinte(labyrinthe &l){
     }
 }
 
+
+labyrinthe pseudeGenerer(int m, int n){
+    srand((unsigned)time(NULL));
+    labyrinthe l;
+    l = vector<vector<cell> >(n);
+    for(int i = 0; i < n; i++)
+        l[i] = vector<cell> (m);
+    for(int i = 0; i < n; i++){
+        l[i] = vector<cell> (m);
+        for(int j = 0; j < m; j++){
+            if(rand() > RAND_MAX / 2){
+                if(i + 1 < n){
+                    l[i][j].bas = false;
+                    l[i + 1][j].haut = false;
+                }
+            }
+            if(rand() > RAND_MAX / 2){
+                if(j + 1 < m){
+                    l[i][j].droite = false;
+                    l[i][j + 1].gauche = false;
+                }
+            } 
+        }
+    }
+    init_enceinte(l);
+    return l;
+}
 
 
 void parcourir(labyrinthe l, int i, int j){
