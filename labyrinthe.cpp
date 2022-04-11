@@ -90,9 +90,6 @@ string dessin(labyrinthe &l){
             if(!l[i][j].bas){
                 s << setw(4) << "***";
             }
-            else{
-                s << setw(4) <<" ";
-            }
         }
         s<< endl;
     }
