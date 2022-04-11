@@ -163,14 +163,8 @@ void parcourirTraverser(labyrinthe &l){
             l[i][j].chemin = false;
         }
     }
-
-    for (int i = 0; i < l.size(); i++){
-        for (int j = 0; j < l[i].size(); j++){
-            if(l[i][j].chemin == false)
-                parcourir(l, i, j);
-        }
-    }
-
+    
+    parcourir(l, 0, 0);
 }
 
 bool estlabyrinthe(labyrinthe &l){
@@ -194,7 +188,7 @@ int main(){
     srand((unsigned)time(NULL));
     labyrinthe l;
     int num = 0;
-    while (num <= 3){
+    while (num <= 0){
         l = pseudeGenerer(3, 2);
         if ( estlabyrinthe(l)){
             num++;
