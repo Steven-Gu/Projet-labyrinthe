@@ -90,6 +90,9 @@ string dessin(labyrinthe &l){
             if(!l[i][j].bas){
                 s << setw(4) << "***";
             }
+            else{
+                s << setw(4) <<" ";
+            }
         }
         s<< endl;
     }
@@ -120,7 +123,6 @@ labyrinthe pseudeGenerer(int m, int n){
     for(int i = 0; i < n; i++)
         l[i] = vector<cell> (m);
     for(int i = 0; i < n; i++){
-        l[i] = vector<cell> (m);
         for(int j = 0; j < m; j++){
             if(rand() > RAND_MAX / 2){
                 if(i + 1 < n){
@@ -141,7 +143,7 @@ labyrinthe pseudeGenerer(int m, int n){
 }
 
 
-void parcourir(labyrinthe l, int i, int j){
+void parcourir(labyrinthe &l, int i, int j){
     l[i][j].chemin = true;
     if (l[i][j].bas == true && l[i + 1][j].chemin == false)
         parcourir(l, i + 1, j);
@@ -155,7 +157,7 @@ void parcourir(labyrinthe l, int i, int j){
 }
 
 
-void parcourirTraverser(labyrinthe l){
+void parcourirTraverser(labyrinthe &l){
     for (int i = 0; i < l.size(); i++){
         for (int j = 0; j < l[i].size(); j++){
             l[i][j].chemin = false;
@@ -171,42 +173,34 @@ void parcourirTraverser(labyrinthe l){
 
 }
 
+bool estlabyrinthe(labyrinthe &l){
+    int m = l[0].size(); // colonne
+    int n = l.size(); // ligne
+    int nb_murs = murs(l);
+    if (nb_murs != nbMurLab(l))
+        return false;
+    parcourirTraverser(l);
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(l[i][j].chemin == false)
+                return false;
+        }
+    }
+    return true;
+}
+
 
 int main(){
     srand((unsigned)time(NULL));
     labyrinthe l;
-    l = pseudeGenerer(2, 3);
-    cout << l[1][1].droite << endl;
-    cout << l[1][1].bas << endl;
-    cout << dessin(l);
-    cout << l[1][1].droite << endl;
-
-    cout << l[1][1].bas << endl;
-    cout << l[2][1].haut << endl;
-
-   /* int m = 2, n = 3;
-    l = labyrinthe(n);
-    for (int i = 0;i < n;i++){
-        l[i] = vector<cell>(m);
-        //[i][3].gauche = false;
-        //l[i][4].droite = false;
-    }*/
-    /*l[2][0].haut = false;
-    l[1][0].bas = false;*/
-    //lignes
-    /*l[2][1].haut = false;
-    l[1][1].bas = false;*/
-
-    //colonnes
-    /**l[1][1].gauche = false;
-    l[1][0].droite = false;
-    l[1][1].bas = false;
-
-
-    init_enceinte(l);
-
-    cout << dessin(l);*/
-    /*l = pseudeGenerer(5, 5);
-    cout << dessin(l);*/
+    int num = 0;
+    while (num <= 3){
+        l = pseudeGenerer(3, 2);
+        if ( estlabyrinthe(l)){
+            num++;
+            cout << dessin(l) << endl;
+        }
+    }
+      
     return 0;
 }
