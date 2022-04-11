@@ -65,7 +65,6 @@ string dessin_ligne(int m){
     return s.str();
 }
 
-
 string dessin(labyrinthe &l){
     // m : colonne
     // n : ligne
@@ -81,12 +80,18 @@ string dessin(labyrinthe &l){
             if(!l[i][j].droite){
                 s << "|";
             }
+            else{
+                s << " ";
+            }
         }
         s<< endl;
         /*lignes*/
         for(int j = 0;j<m;j++){
             if(!l[i][j].bas){
                 s << setw(4) << "***";
+            }
+            else{
+                s << setw(4) <<" ";
             }
         }
         s<< endl;
@@ -113,13 +118,11 @@ void init_enceinte(labyrinthe &l){
 
 
 labyrinthe pseudeGenerer(int m, int n){
-    srand((unsigned)time(NULL));
     labyrinthe l;
     l = vector<vector<cell> >(n);
     for(int i = 0; i < n; i++)
         l[i] = vector<cell> (m);
     for(int i = 0; i < n; i++){
-        l[i] = vector<cell> (m);
         for(int j = 0; j < m; j++){
             if(rand() > RAND_MAX / 2){
                 if(i + 1 < n){
@@ -188,15 +191,14 @@ bool estlabyrinthe(labyrinthe &l){
 
 
 int main(){
+    srand((unsigned)time(NULL));
     labyrinthe l;
     int num = 0;
-    while (num <= 0){
+    while (num <= 3){
         l = pseudeGenerer(3, 2);
         if ( estlabyrinthe(l)){
             num++;
             cout << dessin(l) << endl;
-            cout<<murs(l)<<endl;
-            cout<<nbMurLab(l)<<endl;
         }
     }
       
