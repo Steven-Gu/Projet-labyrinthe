@@ -19,6 +19,30 @@ struct cell{
 
 using labyrinthe = vector<vector<cell> >;
 
+bool operator==(cell &a, cell &b){
+    return (a.bas == b.bas and a.gauche == b.gauche 
+    and a.droite == b.droite and a.haut == b.haut
+    and a.chemin == b.chemin and a.position_now == b.position_now
+    );
+}
+
+bool operator!=(cell &a, cell &b){
+    return not (a == b);
+}
+
+bool operator==(labyrinthe &a, labyrinthe &b){
+    if(a.size() != b.size())
+        return false;
+    for (int i = 0; i < a.size(); i++){
+        if(a[i].size() != b[i].size())
+            return false;
+        for(int j = 0; j < a[0].size(); j++){
+            if(a[i][j]!= b[i][j])
+                return false;
+        }
+    }
+    return true;
+}
 
 int murs (labyrinthe l){
     int f = 0;
@@ -117,6 +141,13 @@ void init_enceinte(labyrinthe &l){
     }
 }
 
+bool inDeque(labyrinthe &l, deque<labyrinthe> &d){
+    for(int i = 0; i < d.size(); i++){
+        if (d[i] == l)
+            return true;
+    }
+    return false;
+}
 
 labyrinthe pseudeGenerer(int m, int n){
     labyrinthe l;
@@ -191,32 +222,33 @@ void retire_mur(deque<labyrinthe> &t){
                 if(l[x][y].position_now){
                     i = x;
                     j = y;
+                    l = t[0];
+                    if (retire_bas(l, i, j)){
+                        l[i + 1][j].position_now = true;
+                        if (not inDeque(l ,t))
+                            t.push_back(l);
+            
+                    }
+                    l = t[0];
+                    if (retire_haut(l, i, j)){
+                        l[i - 1][j].position_now = true;
+                        if (not inDeque(l ,t))
+                            t.push_back(l);
+                    }
+                    l = t[0];
+                    if (retire_droite(l, i, j)){
+                        l[i][j + 1].position_now = true;
+                        if (not inDeque(l ,t))
+                            t.push_back(l);
+                    }
+                    l = t[0];
+                    if (retire_gauche(l, i, j)){
+                        l[i][j - 1].position_now = true;
+                        if (not inDeque(l ,t))
+                            t.push_back(l);
+                    }
                 }
             }
-        }
-        if (retire_bas(l, i, j)){
-            l[i][j].position_now = false;
-            l[i + 1][j].position_now = true;
-            t.push_back(l);
-            
-        }
-        l = t[0];
-        if (retire_haut(l, i, j)){
-            l[i][j].position_now = false;
-            l[i - 1][j].position_now = true;
-            t.push_back(l);
-        }
-        l = t[0];
-        if (retire_droite(l, i, j)){
-            l[i][j].position_now = false;
-            l[i][j + 1].position_now = true;
-            t.push_back(l);
-        }
-        l = t[0];
-        if (retire_gauche(l, i, j)){
-            l[i][j].position_now = false;
-            l[i][j - 1].position_now = true;
-            t.push_back(l);
         }
         t.pop_front();
         num++; 
@@ -300,11 +332,20 @@ int main(){
             cout << dessin(l) << endl;
         }
     }*/
-    deque<labyrinthe> d = labyrintheGenerer(3, 3);
-    for(int i = 0; i < d.size(); i++){
+    deque<labyrinthe> d = labyrintheGenerer(3, 2);
+    /*for(int i = 0; i < d.size(); i++){
         cout << dessin(d[i]) << endl;
     }
     cout << d.size() << endl;
-      
+    for(int i = 1; i < 5; i++){
+        for(int j = i; j < 5; j++){
+            d = labyrintheGenerer(i, j);
+            cout << i << " * " << j << ": "<< d.size() << endl;
+        }
+    }*/
+    for(int i = 1; i < 10; i++){
+        d = labyrintheGenerer(i, 2);
+            cout << i << " * " << 2 << ": "<< d.size() << endl;
+    }
     return 0;
 }
