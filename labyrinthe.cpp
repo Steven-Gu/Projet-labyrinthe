@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <ctime>
-
+#include <deque>
 
 using namespace std;
 
@@ -14,6 +14,7 @@ struct cell{
     bool haut = true;
     bool bas = true;
     bool chemin = false;
+    bool position_now = false;
 };
 
 using labyrinthe = vector<vector<cell> >;
@@ -142,6 +143,110 @@ labyrinthe pseudeGenerer(int m, int n){
     return l;
 }
 
+bool retire_bas(labyrinthe &l, int i, int j){
+    if (i == l.size() - 1 or l[i + 1][j].chemin == true)
+        return false;
+    l[i + 1][j].chemin =true;
+    l[i][j].bas = true;
+    l[i + 1][j].haut = true;
+    return true;
+}
+
+bool retire_haut(labyrinthe &l, int i, int j){
+    if (i == 0 or l[i - 1][j].chemin == true)
+        return false;
+    l[i - 1][j].chemin =true;
+    l[i][j].haut = true;
+    l[i - 1][j].bas = true;
+    return true;
+}
+
+
+bool retire_droite(labyrinthe &l, int i, int j){
+    if (j == l[i].size() - 1 or l[i][j + 1].chemin == true)
+        return false;
+    l[i][j + 1].chemin =true;
+    l[i][j].droite = true;
+    l[i][j + 1].gauche = true;
+    return true;
+}
+
+bool retire_gauche(labyrinthe &l, int i, int j){
+    if (j == 0 or l[i][j - 1].chemin == true)
+        return false;
+    l[i][j - 1].chemin =true;
+    l[i][j].gauche = true;
+    l[i][j - 1].droite = true;
+    return true;
+}
+
+void retire_mur(deque<labyrinthe> &t){
+    int n = t.size();
+    int num = 0;
+    while(num < n){
+        labyrinthe l = t[0];
+        int i = 0, j = 0;
+        for(int x = 0; x < l.size(); x++){
+            for (int y = 0; y < l[x].size(); y++){
+                if(l[x][y].position_now){
+                    i = x;
+                    j = y;
+                }
+            }
+        }
+        if (retire_bas(l, i, j)){
+            l[i][j].position_now = false;
+            l[i + 1][j].position_now = true;
+            t.push_back(l);
+            
+        }
+        l = t[0];
+        if (retire_haut(l, i, j)){
+            l[i][j].position_now = false;
+            l[i - 1][j].position_now = true;
+            t.push_back(l);
+        }
+        l = t[0];
+        if (retire_droite(l, i, j)){
+            l[i][j].position_now = false;
+            l[i][j + 1].position_now = true;
+            t.push_back(l);
+        }
+        l = t[0];
+        if (retire_gauche(l, i, j)){
+            l[i][j].position_now = false;
+            l[i][j - 1].position_now = true;
+            t.push_back(l);
+        }
+        t.pop_front();
+        num++; 
+    }
+}
+
+deque<labyrinthe> labyrintheGenerer(int m, int n){
+    deque<labyrinthe> t;
+    labyrinthe l;
+    l = vector<vector<cell> >(n);
+    for(int i = 0; i < n; i++)
+        l[i] = vector<cell> (m);
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            l[i][j].haut = false;
+            l[i][j].bas = false;
+            l[i][j].gauche = false;
+            l[i][j].droite = false;
+            l[i][j].position_now = false;
+        }
+    }
+    l[0][0].position_now = true;
+    l[0][0].chemin = true;
+    t.push_back(l);
+    for(int i = 0; i < m * n - 1; i++)
+        retire_mur(t);
+    return t;
+ 
+}
+
 
 void parcourir(labyrinthe &l, int i, int j){
     l[i][j].chemin = true;
@@ -163,7 +268,7 @@ void parcourirTraverser(labyrinthe &l){
             l[i][j].chemin = false;
         }
     }
-    
+
     parcourir(l, 0, 0);
 }
 
@@ -186,7 +291,7 @@ bool estlabyrinthe(labyrinthe &l){
 
 int main(){
     srand((unsigned)time(NULL));
-    labyrinthe l;
+    /*labyrinthe l;
     int num = 0;
     while (num <= 0){
         l = pseudeGenerer(3, 2);
@@ -194,7 +299,12 @@ int main(){
             num++;
             cout << dessin(l) << endl;
         }
+    }*/
+    deque<labyrinthe> d = labyrintheGenerer(3, 3);
+    for(int i = 0; i < d.size(); i++){
+        cout << dessin(d[i]) << endl;
     }
+    cout << d.size() << endl;
       
     return 0;
 }
